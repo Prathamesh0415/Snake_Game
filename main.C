@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <conio.h>
+#include <stdlib.h>
 
-#define cols 10
-#define rows 10
+#define cols 30
+#define rows 30
+#define MAX_SNAKE_SIZE 256
 
 char board[rows * cols];
 
@@ -18,16 +20,34 @@ void fill_board(){
     }
 }
 
-int snake_x = 5;
-int snake_y = 5;
+struct Snake_Part{
+    int x;
+    int y;
+};
 
-void draw_snake(){
-    board[snake_y * cols + snake_x] = '@';
+struct Snake{
+    int length;
+    struct Snake_Part part[MAX_SNAKE_SIZE];
+};
+
+struct Snake snake;
+
+void clear_screen(){
+    system("cls");
 }
 
+// int snake_x = 5;
+// int snake_y = 5;
+
+
 void move_snake(int del_y, int del_x){
-    snake_y += del_y;
-    snake_x += del_x;
+    
+    for(int i = snake.length - 1; i > 0; i--){
+        snake.part[i] = snake.part[i - 1];
+    }
+
+    snake.part[0].y += del_y;
+    snake.part[0].x += del_x;
 }
 
 
@@ -53,7 +73,21 @@ void read_keyboard(){
     }
 }
 
+
+void draw_snake(){
+    //board[snake_y * cols + snake_x] = '@';
+
+    board[snake.part[0].y*cols + snake.part[0].x] = '@'; 
+
+    for(int i = snake.length - 1; i > 0; i--){
+        board[snake.part[i].y * cols + snake.part[i].x] = '*';
+    }
+
+     
+}
+
 void print_board(){
+    clear_screen();
     for(int y = 0; y < rows; y++){
         for(int x = 0; x < cols; x++){
             putch(board[y*cols + x]);
@@ -65,6 +99,17 @@ void print_board(){
 int is_game_over = 0;
 
 int main(int argc, char **argv){
+
+
+    snake.length = 3;
+    snake.part[0].x = 5; 
+    snake.part[0].y = 5;
+    snake.part[1].x = 5;
+    snake.part[1].y = 4;
+    snake.part[2].x = 5;
+    snake.part[2].y = 3;
+
+
     while(!is_game_over){
         fill_board();
         draw_snake();
