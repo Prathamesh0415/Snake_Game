@@ -43,9 +43,12 @@ void fill_board(){
                 board[y*cols + x] = ' ';
             }   
         }
-    }
+    }   
+}
+
+void draw_food(){
     for(int i = 0; i < food.length; i++){
-        board[food.food[i].y*cols + food.food[i].x] = '+';
+        if(!food.food[i].consumed) board[food.food[i].y*cols + food.food[i].x] = '+';
     }
 }
 
@@ -64,6 +67,13 @@ void food_pos(){
 // int snake_x = 5;
 // int snake_y = 5;
 
+void game_rules(){
+    for(int i = 0; i < food.length; i++){
+        if(!food.food[i].consumed){
+            if(food.food[i].x == snake.part[0].x && food.food[i].y == snake.part[0].y) food.food[i].consumed = 1;
+        }
+    }
+}
 
 void move_snake(int del_y, int del_x){
     
@@ -106,8 +116,15 @@ void draw_snake(){
     for(int i = snake.length - 1; i > 0; i--){
         board[snake.part[i].y * cols + snake.part[i].x] = '*';
     }
+}
 
-     
+void snake_pos(){
+    snake.part[0].x = 1 + rand() % (cols - 1);
+    snake.part[0].y = 1 + rand() % (rows - 1);
+    for(int i = 1; i < snake.length; i++){
+        snake.part[i].y = snake.part[i - 1].y + 1;
+        snake.part[i].x = snake.part[i - 1].x;
+    }
 }
 
 void print_board(){
@@ -126,25 +143,22 @@ int is_game_over = 0;
 int main(int argc, char **argv){
 
 
-    snake.length = 3;
-    snake.part[0].x = 5; 
-    snake.part[0].y = 5;
-    snake.part[1].x = 5;
-    snake.part[1].y = 4;
-    snake.part[2].x = 5;
-    snake.part[2].y = 3;
+    snake.length = 5;
 
     srand(time(NULL));
 
     food.length = 10;
 
     food_pos();
+    snake_pos();
 
     while(!is_game_over){
         fill_board();
         draw_snake();
+        draw_food();
         print_board();
         read_keyboard();
+        game_rules();
     }
     return 0;
 }
