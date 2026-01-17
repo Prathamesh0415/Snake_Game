@@ -70,7 +70,12 @@ void food_pos(){
 void game_rules(){
     for(int i = 0; i < food.length; i++){
         if(!food.food[i].consumed){
-            if(food.food[i].x == snake.part[0].x && food.food[i].y == snake.part[0].y) food.food[i].consumed = 1;
+            if(food.food[i].x == snake.part[0].x && food.food[i].y == snake.part[0].y){
+                food.food[i].consumed = 1;
+                snake.length++;
+                snake.part[snake.length - 1].x = snake.part[snake.length - 2].x;
+                snake.part[snake.length - 1].y = 1 + snake.part[snake.length - 2].y;
+            } 
         }
     }
 }
@@ -143,7 +148,7 @@ int is_game_over = 0;
 int main(int argc, char **argv){
 
 
-    snake.length = 5;
+    snake.length = 2;
 
     srand(time(NULL));
 
