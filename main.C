@@ -24,6 +24,7 @@ struct Snake snake;
 struct Food_Pos{
     int x;
     int y;
+    int consumed;
 };
 
 struct Food{
@@ -48,17 +49,15 @@ void fill_board(){
     }
 }
 
-
-
-
 void clear_screen(){
     system("cls");
 }
 
 void food_pos(){
     for(int i = 0; i < food.length; i++){
-        food.food[i].x = rand() % 100;
-        food.food[i].y = rand() % 100;
+        food.food[i].x = 1 + rand() % (cols - 2);
+        food.food[i].y = 1 + rand() % (cols - 2);
+        food.food[i].consumed = 0;
     }
 }
 
