@@ -1,24 +1,13 @@
 #include <stdio.h>
 #include <conio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define cols 30
 #define rows 30
 #define MAX_SNAKE_SIZE 256
 
 char board[rows * cols];
-
-void fill_board(){
-    for(int y = 0; y < rows; y++){
-        for(int x = 0; x < cols; x++){
-            if(y == 0 || x == 0 || x == cols - 1 || y == rows - 1){
-                board[y*cols + x] = '#';
-            }else{
-                board[y*cols + x] = ' ';
-            }   
-        }
-    }
-}
 
 struct Snake_Part{
     int x;
@@ -32,8 +21,45 @@ struct Snake{
 
 struct Snake snake;
 
+struct Food_Pos{
+    int x;
+    int y;
+};
+
+struct Food{
+    int length;
+    struct Food_Pos food[MAX_SNAKE_SIZE];
+};
+
+struct Food food;
+
+void fill_board(){
+    for(int y = 0; y < rows; y++){
+        for(int x = 0; x < cols; x++){
+            if(y == 0 || x == 0 || x == cols - 1 || y == rows - 1){
+                board[y*cols + x] = '#';
+            }else{
+                board[y*cols + x] = ' ';
+            }   
+        }
+    }
+    for(int i = 0; i < food.length; i++){
+        board[food.food[i].y*cols + food.food[i].x] = '+';
+    }
+}
+
+
+
+
 void clear_screen(){
     system("cls");
+}
+
+void food_pos(){
+    for(int i = 0; i < food.length; i++){
+        food.food[i].x = rand() % 100;
+        food.food[i].y = rand() % 100;
+    }
 }
 
 // int snake_x = 5;
@@ -75,7 +101,6 @@ void read_keyboard(){
 
 
 void draw_snake(){
-    //board[snake_y * cols + snake_x] = '@';
 
     board[snake.part[0].y*cols + snake.part[0].x] = '@'; 
 
@@ -94,6 +119,7 @@ void print_board(){
         }
         putch('\n');
     }
+    
 }
 
 int is_game_over = 0;
@@ -109,6 +135,11 @@ int main(int argc, char **argv){
     snake.part[2].x = 5;
     snake.part[2].y = 3;
 
+    srand(time(NULL));
+
+    food.length = 10;
+
+    food_pos();
 
     while(!is_game_over){
         fill_board();
